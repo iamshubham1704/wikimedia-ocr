@@ -20,3 +20,16 @@ Please report bugs via Phabricator: https://phabricator.wikimedia.org/tag/wikime
 * Wikimedia OCR is GPL 3.0 or later (see the LICENSE file)
 * [Crop_-_The_Noun_Project.svg](https://commons.wikimedia.org/wiki/File:Crop_-_The_Noun_Project.svg) is CC0
 * [OOjs_UI_icon_move.svg](https://commons.wikimedia.org/wiki/File:OOjs_UI_icon_move.svg) is CC-BY-SA-4.0 
+
+## API Rate Limiting
+
+The Wikimedia OCR API applies rate limiting to prevent abuse. When integrating
+this service into tools that perform bulk operations (such as OCR-ing multiple
+pages of a book), implementors should:
+
+- Add a delay of at least 1 second between consecutive OCR requests
+- Handle `429 Too Many Requests` responses with exponential backoff
+- Check the `Retry-After` header when a rate limit response is received
+
+For bulk OCR workflows, it is recommended to process pages sequentially
+rather than in parallel to stay within rate limits.
